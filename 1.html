@@ -1,9 +1,9 @@
 <html>
 <body>
-	<pre>
+	<!-- <pre> -->
 		<script type="text/javascript">
 			function log(arg){
-				document.writeln(arg);
+				document.writeln(arg+"<br/>");
 			}
 			function identity(x){
 				return x;
@@ -66,10 +66,9 @@
 			// log(inc3(inc3(5)));
 			//fix this
 			*/
-			// var inc = liftf(5);
+			// var inc = liftf(add);
 			// log(inc(5));
 			function twice(operation){
-				// var temp = ope
 				return function(a){
 					return operation(a,a);//operation(a) operation(a);
 				}
@@ -92,8 +91,28 @@
 					return operation2(operation1(a));
 				}
 			}
-			log(composeu(doubl,square)(5));
+			log("composeu(doubl,square)(5) = "+composeu(doubl,square)(5));
+			function composeb(operation1, operation2){
+				return function(a,b,c){
+					return operation2(operation1(a,b),c);
+				}
+			}
+			log("composeb(add,mul)(2,3,7) = "+composeb(add,mul)(2,3,7));
+			function once(operation){
+				var flag = true;
+				return function(a,b){
+					if(flag){
+						flag = false;
+						return operation(a,b);
+					}
+					return undefined;
+				}
+			}
+			var add_once = once(add);
+			log("add_once(3,4) once = "+add_once(3,4));
+			log("add_once(3,4) twice = "+add_once(3,4));
+
 		</script>
-	</pre>
+	<!-- </pre> -->
 </body>
 </html>
