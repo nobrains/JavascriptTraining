@@ -150,7 +150,85 @@
 			log("ele() 2 = " + ele());
 			log("ele() 3 = " + ele());
 
-			
+			function collect(gen, arr){
+				var counter = 0;		
+				return function(){
+					counter += 1;
+					var g = gen();
+					arr[counter] = g;
+					return g;
+				};
+			}
+			var array  = [],
+				col = collect(fromTo(5,7), array);
+			log("col() 1 " + col());	
+			log("col() 2 " + col());	
+			log("col() 3 " + col());	
+			log(array);
+
+			// function filter(gen, operation){
+			// 	var arr = [];
+			// 	var counter = 0;
+			// 	return function() {
+			// 		var g = gen();
+			// 		// arr.push(g);
+			// 		while(!operation(g)){
+			// 			g = gen();
+			// 		}
+			// 		// if(operation(g)){
+			// 			arr.push(g);
+			// 		// }
+			// 		counter++;
+			// 		return arr[counter];
+			// 		// return arr.length;
+			// 	}
+			// }
+			function filter(gen, predicate){
+				return function() {
+					var value;
+					do{
+						value = gen();
+					}while(
+						value !== undefined && !predicate(value)
+						);
+					return value;
+				}
+			}
+			var fil = filter(fromTo(0,5),
+				function third(value){
+					return (value % 3) === 0;
+				});
+			log("fil() 1 "+fil()); //0
+			log("fil() 2 "+fil()); //3
+			log("fil() 3 "+fil()); //undefined
+
+			function concat(gen1, gen2){
+				var arr = [],g1,g2;
+				do{
+					g1 = gen1();
+					if(g1!==undefined){
+					arr.push(g1);
+				}
+				}while(g1!==undefined)
+				do{
+					g2 = gen2();
+					if(g2!==undefined){
+					arr.push(g2);
+				}
+				}while(g2!==undefined)
+
+				var counter = 0;
+				return function() {
+					return arr[counter++];
+				};
+			}
+			var con = concat(fromTo(0,3),fromTo(0,2));
+			log("con() 1 = "+ con() );
+			log("con() 2 = "+ con() );
+			log("con() 3 = "+ con() );
+			log("con() 4 = "+ con() );
+			log("con() 5 = "+ con() );
+			log("con() 6 = "+ con() );
 		</script>
 	<!-- </pre> -->
 </body>
