@@ -47,6 +47,7 @@
 			}
 			var add3 = curry(add,3);
 			// log(add3(4));
+			/*
 			function inc1(a){
 				return add(a,1);
 			}
@@ -64,7 +65,9 @@
 			// log(inc3(5));
 			// log(inc3(inc3(5)));
 			//fix this
-
+			*/
+			// var inc = liftf(5);
+			// log(inc(5));
 			function twice(operation){
 				// var temp = ope
 				return function(a){
@@ -83,7 +86,13 @@
 				}
 			}
 			var bus = reverse(sub);
-			log(bus(3,2));
+			// log(bus(3,2));
+			function composeu(operation1, operation2){
+				return function(a){
+					return operation2(operation1(a));
+				}
+			}
+			log(composeu(doubl,square)(5));
 		</script>
 	</pre>
 </body>
