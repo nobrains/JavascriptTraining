@@ -229,6 +229,46 @@
 			log("con() 4 = "+ con() );
 			log("con() 5 = "+ con() );
 			log("con() 6 = "+ con() );
+
+			function revocable(fun){
+				var flag = true;
+				return {
+					invoke: function(id){
+						if(flag) {
+							return fun(id);
+						}
+						return undefined;	
+					},
+					revoke: function(){
+						flag= false;
+					}
+				};
+			}
+			var rev = revocable(identity), 
+				invoke = rev.invoke;
+			log("invoke(7) = " + invoke(7));
+			rev.revoke();
+			log("invoke(8)= " + invoke(7));
+
+			function counter(id){
+				var temp = id;
+				return {
+					next: function(){
+						return ++temp;
+					},
+					prev: function(){
+						return --temp;
+					}
+				}
+			}
+			var object = counter(10),
+				next = object.next;
+				prev = object.prev;
+			log("-----");
+			log(next()); //11
+			log(prev()); //10
+			log(prev()); //9
+			log(next()); //10
 		</script>
 	<!-- </pre> -->
 </body>
