@@ -124,7 +124,33 @@
 			log("log(index()) 2 = "+index());
 			log("log(index()) 3 = "+index());
 			log("log(index()) 4 = "+index());
+			
+			// function element(arr, to){
+			// 	// var lo = 1;
+			// 	// var hi = 3;
+			// 	var counter = lo;
+			// 	return function() {
+			// 		if(lo<hi){
+			// 			counter++;lo++;
+			// 			return arr[counter-1];
+			// 		}
+			// 		return undefined;
+			// 	}
+			// }
+			function element(array,gen){
+				if(gen === undefined){
+					gen = fromTo(0,array.length);
+				}
+				return function() {
+					return array[gen()];
+				}
+			}
+			var ele = element(['a','b','c','d'],fromTo(1,3));
+			log("ele() 1 = " + ele());
+			log("ele() 2 = " + ele());
+			log("ele() 3 = " + ele());
 
+			
 		</script>
 	<!-- </pre> -->
 </body>
