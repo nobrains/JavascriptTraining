@@ -437,16 +437,61 @@
 			log(addg(2)(7)());//9
 			log(addg(3)(4)(0)()); //7
 			log(addg(1)(2)(4)(8)()); //15
+
+			log("----------");
+			function liftg(operation) {
+				var func = function(no){
+					if(arguments.length === 0){
+						return undefined;
+					}
+					return function(newNo){
+						if(arguments.length===0){
+							return no;
+						}
+						else
+							return func(operation(newNo,no));
+					}	
+				}
+				return func;
+			}
+
+			log(liftg(mul)());
+			log(liftg(mul)(3)());
+			log(liftg(mul)(4)(3)(0)());
+			log(liftg(mul)(1)(2)(4)(8)());
+			log("----------");
+
+			function arrayg(no){
+				var arr = [];
+				if(arguments.length === 0){
+					return arr;
+				}
+				arr.push(no);
+				var func = function(newNo){
+					if(arguments.length === 0){
+						return arr;
+					}
+					arr.push(newNo);
+					return func;	
+				};
+				return func;
+			}
+			log(arrayg());
+			log(arrayg(3)());
+			log(arrayg(3)(4)(5)());
+
+			log("-------------");
+
+			function unaryc(operation){
+
+				return function(callback, no){
+					callback(operation(no));
+				}
+			}
+			var sqrtc = unaryc(Math.sqrt);
+			// sqrtc(alert,81);
+			sqrtc(log,81);
 		</script>
 	<!-- </pre> -->
 </body>
 </html>
-
-<!--
-	write a fcuntion addg that adds from many invocations, until it sees an empty invocation.
-	addg() //undefined
-	addg(2)()//2
-	addg(2)(7)()//9
-	addg(3)(4)(0)() //7
-	addg(1)(2)(4)(8)() //15
--->
