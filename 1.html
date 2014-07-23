@@ -68,6 +68,9 @@
 			*/
 			// var inc = liftf(add);
 			// log(inc(5));
+			function inc(id){
+				return id + 1;
+			}
 			function twice(operation){
 				return function(a){
 					return operation(a,a);//operation(a) operation(a);
@@ -269,7 +272,181 @@
 			log(prev()); //10
 			log(prev()); //9
 			log(next()); //10
+
+			log("-----");
+
+			function gensymf(prefix){
+				var number = 0;
+				return function(){
+					number++;
+					return prefix + number;
+				}
+			}
+			var geng = gensymf("G"),
+				genh = gensymf("H");
+			log(geng());
+			log(genh());
+			log(geng());
+			log(genh());	
+			log("-----");
+			function gensymff(func,seed){
+				return function(char){
+					var number = seed;
+					return function(){
+						number = func(number);
+						return char + number;
+					}
+				}
+			}
+
+			var gensymf = gensymff(inc,0),
+				geng = gensymf("G"),
+				genh = gensymf("H");
+			log(geng());
+			log(genh());
+			log(geng());
+			log(genh());
+			log("------");
+
+			function fibonaccif(lo,hi){
+				var l = lo, h = hi, counter = 0;
+				return function(){
+					if(counter === 0){
+						counter++;
+						temp = l;
+						l = h;
+						h = temp;
+						return lo;
+					}
+					if(counter === 1){
+						temp = l;
+						l = h;
+						// counter++;
+						h = temp + l;
+						return h;
+					}
+					else {
+						temp = l
+						l = h;
+						h = temp+h;
+						return l+h;
+					}
+
+				}
+			}
+			var fib = fibonaccif(0,1);
+			log(fib());//0
+			log(fib());//1
+			log(fib());//1
+			log(fib());//2
+			log(fib());//3
+			log(fib());//5
+			function m(value,source){
+				return {
+					value: value,
+					source: source || String(value)
+				};
+			}
+			log("-----");
+			function addm(m1, m2){
+				return m(
+					m1.value + m2.value,
+					"("+(m1.source || String(value))+"+" + (m2.source || String(value))+")" 
+				);
+			}
+			log(JSON.stringify(addm(m(3),m(4))));
+			log(JSON.stringify(addm(m(1),m(Math.PI,"pi"))));
+			log("-----");
+			function liftm(operation, symbol){
+				return function(m1,m2){
+					return m(operation(m1.value,m2.value), 
+						"("+(m1.source || String(m1.value))+ symbol + (m2.source || String(m2.value))+")"
+						);
+				}
+			}
+			log("-----");
+			var addm = liftm(add,"+");
+			log(JSON.stringify(addm(m(3),m(4))));
+			log(JSON.stringify(liftm(mul,"*")(m(3),m(4))));
+			log("------------")
+			
+			function liftm1(operation,symbol){
+				return function(m1,m2){
+					var a1 = m1.value||m1;
+					var b1= m2.value||m2;
+					return m(operation(a1,b1), 
+							"("+(m1.source || (m1.value || String(m1))) + symbol + (m2.source || (m2.value || String(m2)))+")"
+							);
+				}
+			}
+			var addm = liftm1(add,"+");
+			log(JSON.stringify(addm(3,4)));
+			log(JSON.stringify(liftm1(mul,"*")(3,4)));
+			log("--------");
+			function exp(arr){
+				if(typeof arr === 'number'){
+					return arr;
+				}
+				return arr[0](arr[1],arr[2]);
+			}
+			var sae = [mul,3,3];
+			log(exp(sae));
+			log(exp(42));
+			log("--------");
+
+			function square(num){
+				return num*num;
+			} 
+			function exp1(value){
+				return Array.isArray(value)?value[0](
+					exp1(value[1]),exp1(value[2])):value;
+			}
+			var nae = [
+				Math.sqrt, [add, [square,3], [square,4]]
+			];
+			log(exp1(nae));
+			log("-------------");
+
+			// var total = 0;
+			// function addg(no) {							
+			// 	if(arguments.length === 0){
+			// 		if(total===0)
+			// 			return undefined;
+			// 		else {
+			// 			var temp = total;
+			// 			total = 0
+			// 			return temp;
+			// 		}
+			// 	}
+			// 	total = total + no;
+			// 	return addg;
+			// }
+			function addg(no){
+				if(arguments.length === 0){
+					return undefined;
+				}
+				return function(newNo){
+					if(arguments.length === 0){
+						return no;
+					}
+					return addg(no+newNo);
+				}
+			}
+			log(addg()); //undefined
+			log(addg(2)());//2
+			log(addg(2)(7)());//9
+			log(addg(3)(4)(0)()); //7
+			log(addg(1)(2)(4)(8)()); //15
 		</script>
 	<!-- </pre> -->
 </body>
 </html>
+
+<!--
+	write a fcuntion addg that adds from many invocations, until it sees an empty invocation.
+	addg() //undefined
+	addg(2)()//2
+	addg(2)(7)()//9
+	addg(3)(4)(0)() //7
+	addg(1)(2)(4)(8)() //15
+-->
